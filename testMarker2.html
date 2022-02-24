@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="map" style="width: 100%;height:800px;"></div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+
+    <script>
+        var map;
+        var marker;
+        var markerInfoWindow;
+
+        function intMap() {
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: new google.maps.LatLng(60.3000216, 24.944929),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+
+            // Create a new marker
+            marker = new google.maps.Marker({
+                draggable: true,
+                icon: 'https://cdn-icons-png.flaticon.com/64/3135/3135715.png'
+            });
+            markerInfoWindow = new google.maps.InfoWindow();
+
+            google.maps.event.addListener(map, 'click', function (event) {
+                marker.setPosition(event.latLng);
+                marker.setMap(map);
+
+                var contentString = "<a href='#' onclick='openNew();'>Click here to open new infowindow!</a>";
+                markerInfoWindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+                markerInfoWindow.open(map, marker);
+                marker.addListener('click', function () {
+                    markerInfoWindow.open(map, marker);
+                });
+            });
+        }
+        google.maps.event.addDomListener(window, "load", intMap);
+
+        function openNew() {
+            markerInfoWindow.close();
+            var contentString = "Open this infowind when clicked link";
+            markerInfoWindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            markerInfoWindow.open(map, marker);
+        }
+    </script>
+</body>
+
+</html>
