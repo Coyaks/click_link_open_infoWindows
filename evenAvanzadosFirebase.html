@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase</title>
+</head>
+
+<body>
+
+    <h1>Firebase</h1>
+
+    <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>
+    <script>
+        //console.log(child.key + ": " + child.val());
+
+        var firebaseConfig = {
+            apiKey: "AIzaSyBmYjLdPu0mAJcjxh-uXEHiRdueg0qziAc",
+            authDomain: "crud-web-2ec66.firebaseapp.com",
+            //databaseURL: "https://crud-web-2ec66-default-rtdb.firebaseio.com",
+            databaseURL: "https://cmv-taxi-8bbab-default-rtdb.firebaseio.com/",
+            projectId: "crud-web-2ec66",
+            storageBucket: "crud-web-2ec66.appspot.com",
+            messagingSenderId: "170659413593",
+            appId: "1:170659413593:web:d3bf853e0a9f20c3133b48",
+            measurementId: "G-X7PW818489"
+        };
+
+        // === Initialize Firebase === 
+        firebase.initializeApp(firebaseConfig);
+
+        //conexion con FB
+        let tabla = firebase.database().ref('conductores')
+        //OBTENER DATOS DESDE FIREBASE (ARBOLES)
+        let conductoresArray=[]      
+        
+        tabla.once("value", function (snapshot) {
+            snapshot.forEach(function (child) {
+                conductoresArray.push(child.key) //guardamos el id de los clientes
+            });
+
+            conductoresArray.forEach(function (child) {
+                let tabla = firebase.database().ref('conductores/' + child + '/estado').once("value")
+                    .then((snapshot) => {
+                        // console.log("Finalll: ",snapshot.val())
+                        let pathEstadoCond = 'conductores/' + child + '/estado'
+                        //let pathEstadoCond= firebase.database().ref('conductores/'+child+'/conectado')
+                        // console.log("PATH: ",pathEstadoCond)
+                        console.log("ENTROOO: ",pathEstadoCond)
+                            
+                        firebase.database().ref(pathEstadoCond).on('child_changet', function (data) {
+                            //markers[data.key].setMap(null);
+                            console.log("HUBO UN CAMBIO0OO2: ", data)
+                            // if(data.val().conectado==1){
+                            //     $listaCond2.append($itemCond)
+                            //    //AddCar(data);
+                            //     console.log("HUBO UN CAMBIO0OO: ",data)
+                            // }
+                        });
+                    });
+            })
+        });
+
+resArray = []
+
+//Ejemplo funcional: se creo un nuevo nodo llamado: "estado: {conectado:1}"
+        // firebase.database().ref('conductores/500/estado').on('child_changed', function (data) {
+        //     console.log("HUBO UN CAMBIO0OO: ")
+        // });
+
+    </script>
+</body>
+
+</html>
